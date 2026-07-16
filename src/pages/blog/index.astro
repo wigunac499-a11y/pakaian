@@ -1,0 +1,52 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getDb } from '../../db';
+import { blogPosts } from '../../db/schema';
+import { eq, desc } from 'drizzle-orm';
+
+const db = await getDb();
+const posts = await db.select().from(blogPosts).where(eq(blogPosts.isPublished, true)).orderBy(desc(blogPosts.publishedAt));
+---
+
+<MainLayout seo={{
+  title: 'Blog & Edukasi Website',
+  description: 'Artikel dan panduan seputar pembuatan website, tips SEO, dan digital marketing untuk mengembangkan bisnis online Anda.',
+  canonical: Astro.url.origin + '/blog'
+}}>
+  <section class="bg-gray-50 py-12 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Blog & Edukasi</h1>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+          Tips, panduan, dan insight seputar pembuatan website, SEO, dan digital marketing.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.length === 0 && (
+          <div class="col-span-full text-center py-16 text-gray-500">
+            <p class="text-lg">Belum ada artikel.</p>
+          </div>
+        )}
+        {posts.map(post => (
+          <article class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
+            <div class="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
+              {post.coverImage
+                ? <img src={post.coverImage} alt={post.title} class="w-full h-full object-cover" loading="lazy" />
+                : <span class="text-4xl font-bold text-blue-300">{post.title.charAt(0)}</span>
+              }
+            </div>
+            <div class="p-5">
+              <time class="text-xs text-gray-400">{new Date(post.publishedAt!).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+              <h2 class="mt-1 text-lg font-bold text-gray-900">
+                <a href={`/blog/${post.slug}`} class="hover:text-blue-600 transition">{post.title}</a>
+              </h2>
+              <p class="mt-1 text-gray-600 text-sm line-clamp-2">{post.excerpt}</p>
+              <a href={`/blog/${post.slug}`} class="mt-3 inline-block text-blue-600 font-semibold text-sm hover:underline">Baca Selengkapnya</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>

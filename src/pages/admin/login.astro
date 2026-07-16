@@ -1,0 +1,55 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout seo={{ title: 'Login Admin', description: '', noIndex: true }}>
+  <div class="min-h-screen flex items-center justify-center -mt-16">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+      <h1 class="text-2xl font-bold text-center mb-6">Login Admin</h1>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Username</label>
+          <input type="text" name="username" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Password</label>
+          <input type="password" name="password" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" />
+        </div>
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition">
+          Login
+        </button>
+        <p id="login-status" class="text-center text-sm text-red-500"></p>
+      </form>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  const form = document.getElementById('login-form');
+  const status = document.getElementById('login-status');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const body = Object.fromEntries(data.entries());
+
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        window.location.href = '/admin';
+      } else {
+        const result = await res.json();
+        status.textContent = result.error || 'Login gagal';
+      }
+    } catch {
+      status.textContent = 'Terjadi kesalahan';
+    }
+  });
+</script>

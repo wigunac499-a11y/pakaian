@@ -1,0 +1,52 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getAuthUser } from '../../lib/auth';
+import { getDb } from '../../db';
+import { templates, blogPosts, contacts } from '../../db/schema';
+import { eq } from 'drizzle-orm';
+
+const user = getAuthUser(Astro.cookies);
+if (!user) return Astro.redirect('/admin/login');
+
+const db = await getDb();
+const templateCount = (await db.select().from(templates)).length;
+const postCount = (await db.select().from(blogPosts)).length;
+const messageCount = (await db.select().from(contacts)).length;
+const unreadMessages = (await db.select().from(contacts).where(eq(contacts.isRead, false))).length;
+---
+
+<AdminLayout seo={{ title: 'Dashboard Admin', description: '', noIndex: true }} user={user}>
+  <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+      <p class="text-sm text-gray-500">Total Template</p>
+      <p class="text-3xl font-bold mt-1">{templateCount}</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+      <p class="text-sm text-gray-500">Total Artikel</p>
+      <p class="text-3xl font-bold mt-1">{postCount}</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+      <p class="text-sm text-gray-500">Total Pesan</p>
+      <p class="text-3xl font-bold mt-1">{messageCount}</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+      <p class="text-sm text-gray-500">Pesan Baru</p>
+      <p class="text-3xl font-bold mt-1 text-blue-600">{unreadMessages}</p>
+    </div>
+  </div>
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <a href="/admin/templates" class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition block">
+      <h3 class="font-semibold">Kelola Template</h3>
+      <p class="text-sm text-gray-500 mt-1">Tambah, edit, dan hapus template</p>
+    </a>
+    <a href="/admin/blog" class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition block">
+      <h3 class="font-semibold">Kelola Blog</h3>
+      <p class="text-sm text-gray-500 mt-1">Tambah, edit, dan hapus artikel</p>
+    </a>
+    <a href="/admin/messages" class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition block">
+      <h3 class="font-semibold">Lihat Pesan</h3>
+      <p class="text-sm text-gray-500 mt-1">Kelola pesan dari klien</p>
+    </a>
+  </div>
+</AdminLayout>

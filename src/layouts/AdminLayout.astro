@@ -1,0 +1,42 @@
+---
+import '../styles/global.css';
+import { buildSEO, type SEOProps } from '../lib/seo';
+
+export interface Props {
+  seo?: SEOProps;
+  user?: { username: string };
+}
+
+const { seo, user } = Astro.props;
+const meta = buildSEO(seo || { title: 'Dashboard', description: '' });
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{meta.title}</title>
+  </head>
+  <body class="bg-gray-100 text-gray-900 antialiased flex flex-col min-h-screen">
+    <nav class="bg-gray-900 text-white px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="/admin" class="font-bold text-lg">Web Pakai Admin</a>
+        <div class="flex gap-4 text-sm">
+          <a href="/admin/templates" class="hover:text-blue-300 transition">Templates</a>
+          <a href="/admin/blog" class="hover:text-blue-300 transition">Blog</a>
+          <a href="/admin/messages" class="hover:text-blue-300 transition">Pesan</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 text-sm">
+        {user && <span class="text-gray-400">{user.username}</span>}
+        <a href="/" class="hover:text-blue-300 transition">Lihat Situs</a>
+        <a href="/api/logout" class="text-red-400 hover:text-red-300 transition">Logout</a>
+      </div>
+    </nav>
+    <main class="flex-1 p-6 max-w-6xl mx-auto w-full">
+      <slot />
+    </main>
+  </body>
+</html>

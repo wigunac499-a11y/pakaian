@@ -1,0 +1,46 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getDb } from '../../db';
+import { blogPosts } from '../../db/schema';
+import { eq } from 'drizzle-orm';
+
+const db = await getDb();
+const { slug } = Astro.params;
+
+const [post] = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug!));
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+---
+
+<MainLayout seo={{
+  title: post.title,
+  description: post.excerpt || post.metaDescription || post.title,
+  canonical: `${Astro.url.origin}/blog/${post.slug}`,
+  ogImage: post.coverImage || undefined
+}}>
+  <article class="py-12 md:py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="/blog" class="inline-flex items-center gap-1 text-blue-600 hover:underline text-sm mb-6">
+        &larr; Kembali ke Blog
+      </a>
+
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{post.title}</h1>
+
+      <div class="flex items-center gap-4 text-sm text-gray-500 mb-8">
+        <span>Oleh {post.author || 'Admin'}</span>
+        <span>&middot;</span>
+        <time>{new Date(post.publishedAt!).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+      </div>
+
+      {post.coverImage && (
+        <img src={post.coverImage} alt={post.title} class="w-full rounded-2xl mb-8 object-cover aspect-video" />
+      )}
+
+      <div class="prose prose-gray max-w-none">
+        {post.content.split('\n').map(p => p.trim() ? <p class="mb-4 leading-relaxed text-gray-700">{p}</p> : null)}
+      </div>
+    </div>
+  </article>
+</MainLayout>

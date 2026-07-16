@@ -1,0 +1,36 @@
+{
+  "name": "pakaian",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "db:push": "drizzle-kit push",
+    "db:seed": "npx tsx src/db/seed.ts"
+  },
+  "dependencies": {
+    "@astrojs/db": "^0.21.3",
+    "@astrojs/node": "^11.0.2",
+    "@astrojs/sitemap": "^3.7.3",
+    "@lucide/astro": "^1.24.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-astro": "^0.556.0",
+    "mysql2": "^3.23.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "drizzle-kit": "^0.31.10"
+  }
+}

@@ -1,0 +1,121 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { ArrowRight, Zap, Search, Layout, Shield } from '@lucide/astro';
+---
+
+<MainLayout seo={{
+  title: 'Platform Pembuatan Website Instan',
+  description: 'Buat website impian Anda dalam hitungan menit dengan template siap pakai. Cepat, responsif, SEO-friendly, tanpa coding.'
+}}>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
+          Website Impian Anda,{' '}
+          <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Siap Pakai
+          </span>
+        </h1>
+        <p class="mt-6 text-lg md:text-xl text-gray-600 leading-relaxed">
+          Platform pembuatan website instan dengan template profesional siap pakai. 
+          Tanpa coding, cepat loading, dan optimal untuk SEO. Cocok untuk UMKM, 
+          company profile, hingga portofolio pribadi.
+        </p>
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/template" class="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+            Lihat Template
+            <ArrowRight class="w-5 h-5" />
+          </a>
+          <a href="/kontak" class="inline-flex items-center justify-center gap-2 border-2 border-gray-300 text-gray-700 px-8 py-3.5 rounded-full text-base font-semibold hover:border-blue-600 hover:text-blue-600 transition">
+            Konsultasi Gratis
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Kenapa Memilih Web Pakai?</h2>
+        <p class="mt-4 text-gray-600 text-lg">Kami menggabungkan kecepatan, desain, dan SEO dalam satu platform</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center p-6">
+          <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Zap class="w-7 h-7 text-blue-600" />
+          </div>
+          <h3 class="font-semibold text-lg mb-2">Super Cepat</h3>
+          <p class="text-gray-600 text-sm">Loading instan dengan skor Core Web Vitals 100%</p>
+        </div>
+        <div class="text-center p-6">
+          <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Layout class="w-7 h-7 text-purple-600" />
+          </div>
+          <h3 class="font-semibold text-lg mb-2">Desain Modern</h3>
+          <p class="text-gray-600 text-sm">Template profesional yang bisa dikustomisasi</p>
+        </div>
+        <div class="text-center p-6">
+          <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Search class="w-7 h-7 text-green-600" />
+          </div>
+          <h3 class="font-semibold text-lg mb-2">SEO Optimal</h3>
+          <p class="text-gray-600 text-sm">Struktur website ramah mesin pencari</p>
+        </div>
+        <div class="text-center p-6">
+          <div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Shield class="w-7 h-7 text-orange-600" />
+          </div>
+          <h3 class="font-semibold text-lg mb-2">Aman & Handal</h3>
+          <p class="text-gray-600 text-sm">Keamanan terjamin dengan validasi server-side</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Kategori Template</h2>
+        <p class="mt-4 text-gray-600 text-lg">Pilih template sesuai kebutuhan bisnis Anda</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="/template?kategori=e-commerce" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 p-8 text-white">
+          <h3 class="text-2xl font-bold mb-2">E-Commerce</h3>
+          <p class="text-blue-100 text-sm mb-4">Template toko online siap pakai</p>
+          <span class="inline-flex items-center gap-1 text-sm font-semibold group-hover:gap-2 transition-all">
+            Lihat Template <ArrowRight class="w-4 h-4" />
+          </span>
+        </a>
+        <a href="/template?kategori=company-profile" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-purple-700 p-8 text-white">
+          <h3 class="text-2xl font-bold mb-2">Company Profile</h3>
+          <p class="text-purple-100 text-sm mb-4">Website profil perusahaan profesional</p>
+          <span class="inline-flex items-center gap-1 text-sm font-semibold group-hover:gap-2 transition-all">
+            Lihat Template <ArrowRight class="w-4 h-4" />
+          </span>
+        </a>
+        <a href="/template?kategori=portofolio" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500 to-green-700 p-8 text-white">
+          <h3 class="text-2xl font-bold mb-2">Portofolio</h3>
+          <p class="text-green-100 text-sm mb-4">Portofolio pribadi atau kreatif</p>
+          <span class="inline-flex items-center gap-1 text-sm font-semibold group-hover:gap-2 transition-all">
+            Lihat Template <ArrowRight class="w-4 h-4" />
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Siap Membangun Website Anda?</h2>
+      <p class="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+        Tim kami siap membantu Anda dari awal hingga website live. Konsultasi gratis tanpa kewajiban.
+      </p>
+      <a href="/kontak" class="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+        Hubungi Kami Sekarang
+        <ArrowRight class="w-5 h-5" />
+      </a>
+    </div>
+  </section>
+</MainLayout>

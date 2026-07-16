@@ -1,0 +1,198 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAuthUser } from '../../../lib/auth';
+import { getDb } from '../../../db';
+import { templates } from '../../../db/schema';
+import { desc } from 'drizzle-orm';
+import { Plus, Edit, Trash2, ExternalLink } from '@lucide/astro';
+
+const user = getAuthUser(Astro.cookies);
+if (!user) return Astro.redirect('/admin/login');
+
+const db = await getDb();
+const allTemplates = await db.select().from(templates).orderBy(desc(templates.createdAt));
+---
+
+<AdminLayout seo={{ title: 'Kelola Template', description: '', noIndex: true }} user={user}>
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Kelola Template</h1>
+    <button onclick="document.getElementById('form-modal').classList.remove('hidden')"
+      class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-1">
+      <Plus class="w-4 h-4" /> Tambah Template
+    </button>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b">
+        <tr>
+          <th class="text-left p-4 font-medium text-gray-500">Judul</th>
+          <th class="text-left p-4 font-medium text-gray-500">Kategori</th>
+          <th class="text-left p-4 font-medium text-gray-500">Status</th>
+          <th class="text-right p-4 font-medium text-gray-500">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {allTemplates.map(t => (
+          <tr class="border-b last:border-0 hover:bg-gray-50">
+            <td class="p-4">
+              <span class="font-medium">{t.title}</span>
+              <div class="text-xs text-gray-400">/{t.slug}</div>
+            </td>
+            <td class="p-4 text-gray-600">{t.category}</td>
+            <td class="p-4">
+              <span class={`text-xs font-semibold px-2 py-1 rounded-full ${t.isPublished ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                {t.isPublished ? 'Published' : 'Draft'}
+              </span>
+            </td>
+            <td class="p-4 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <a href={`/template/${t.slug}`} class="p-1.5 hover:bg-gray-100 rounded" title="Lihat">
+                  <ExternalLink class="w-4 h-4 text-gray-500" />
+                </a>
+                <button class="p-1.5 hover:bg-gray-100 rounded edit-btn" data-id={t.id} title="Edit">
+                  <Edit class="w-4 h-4 text-blue-600" />
+                </button>
+                <button class="p-1.5 hover:bg-gray-100 rounded delete-btn" data-id={t.id} data-title={t.title} title="Hapus">
+                  <Trash2 class="w-4 h-4 text-red-500" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {allTemplates.length === 0 && <p class="p-8 text-center text-gray-500">Belum ada template.</p>}
+  </div>
+
+  <div id="form-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-bold mb-4" id="modal-title">Tambah Template Baru</h2>
+      <form id="template-form" class="space-y-4">
+        <input type="hidden" name="id" id="edit-id" />
+        <div>
+          <label class="block text-sm font-medium mb-1">Judul *</label>
+          <input type="text" name="title" id="input-title" required
+            class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Kategori *</label>
+          <select name="category" id="input-category" required
+            class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none">
+            <option value="E-Commerce">E-Commerce</option>
+            <option value="Company Profile">Company Profile</option>
+            <option value="Portofolio">Portofolio</option>
+            <option value="Landing Page">Landing Page</option>
+            <option value="Blog">Blog</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Deskripsi *</label>
+          <textarea name="description" id="input-description" rows="3" required
+            class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Fitur (pisahkan dengan baris baru)</label>
+          <textarea name="features" id="input-features" rows="3"
+            class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">URL Gambar</label>
+          <input type="url" name="image" id="input-image"
+            class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">URL Demo</label>
+          <input type="url" name="demoUrl" id="input-demo"
+            class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Harga</label>
+          <input type="text" name="price" id="input-price" placeholder="Contoh: Rp 500.000"
+            class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" />
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="isPublished" id="input-published" value="true" checked
+            class="w-4 h-4" />
+          <label for="input-published" class="text-sm">Published</label>
+        </div>
+        <div class="flex gap-3">
+          <button type="submit"
+            class="flex-1 bg-blue-600 text-white py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition">
+            Simpan
+          </button>
+          <button type="button" onclick="closeModal()"
+            class="px-6 py-2.5 rounded-xl border font-semibold hover:bg-gray-50 transition">
+            Batal
+          </button>
+        </div>
+        <p id="form-status" class="text-center text-sm"></p>
+      </form>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  let editingId = null;
+  const modal = document.getElementById('form-modal');
+  const form = document.getElementById('template-form');
+  const status = document.getElementById('form-status');
+  const modalTitle = document.getElementById('modal-title');
+
+  function closeModal() { modal?.classList.add('hidden'); editingId = null; form?.reset(); modalTitle.textContent = 'Tambah Template Baru'; }
+  (window as any).closeModal = closeModal;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    status.textContent = 'Menyimpan...';
+    status.className = 'text-center text-sm text-gray-500';
+
+    const data = new FormData(form);
+    const body: Record<string, any> = Object.fromEntries(data.entries());
+    body.isPublished = data.has('isPublished');
+
+    const url = editingId ? `/api/templates/${editingId}` : '/api/templates';
+    const method = editingId ? 'PUT' : 'POST';
+
+    try {
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (res.ok) {
+        status.textContent = 'Berhasil disimpan!';
+        status.className = 'text-center text-sm text-green-600 font-medium';
+        setTimeout(() => window.location.reload(), 800);
+      } else {
+        const result = await res.json();
+        status.textContent = result.error || 'Gagal menyimpan';
+        status.className = 'text-center text-sm text-red-500';
+      }
+    } catch {
+      status.textContent = 'Terjadi kesalahan';
+      status.className = 'text-center text-sm text-red-500';
+    }
+  });
+
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-id');
+      try {
+        const res = await fetch(`/api/templates/${id}`);
+      } catch {}
+      modal?.classList.remove('hidden');
+      editingId = id;
+      modalTitle.textContent = 'Edit Template';
+      status.textContent = '';
+    });
+  });
+
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-id');
+      const title = btn.getAttribute('data-title');
+      if (!confirm(`Hapus template "${title}"?`)) return;
+      try {
+        const res = await fetch(`/api/templates/${id}`, { method: 'DELETE' });
+        if (res.ok) window.location.reload();
+      } catch {}
+    });
+  });
+</script>

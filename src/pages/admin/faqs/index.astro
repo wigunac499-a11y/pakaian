@@ -1,0 +1,67 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAuthUser } from '../../../lib/auth';
+import { db } from '../../../db';
+import { faqs } from '../../../db/schema';
+import { asc } from 'drizzle-orm';
+import { Plus, Edit, Trash2, GripVertical } from '@lucide/astro';
+
+const user = getAuthUser(Astro.cookies);
+if (!user) return Astro.redirect('/admin/login');
+
+const items = db.select().from(faqs).orderBy(asc(faqs.order)).all();
+---
+
+<AdminLayout seo={{ title: 'FAQ', description: '', noIndex: true }} user={user}>
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">FAQ</h1>
+    <button onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-1"><Plus class="w-4 h-4" /> Tambah FAQ</button>
+  </div>
+  <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b"><tr><th class="text-left p-4 font-medium text-gray-500">Pertanyaan</th><th class="text-left p-4 font-medium text-gray-500">Kategori</th><th class="text-left p-4 font-medium text-gray-500">Status</th><th class="text-right p-4 font-medium text-gray-500">Aksi</th></tr></thead>
+      <tbody>{items.map(f => <tr class="border-b last:border-0 hover:bg-gray-50">
+        <td class="p-4 font-medium">{f.question}</td>
+        <td class="p-4 text-gray-600 capitalize">{f.category}</td>
+        <td class="p-4"><span class={`text-xs font-semibold px-2 py-1 rounded-full ${f.isPublished ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{f.isPublished ? 'Published' : 'Draft'}</span></td>
+        <td class="p-4 text-right"><button class="edit-btn p-1.5 hover:bg-gray-100 rounded" data-id={f.id} data-question={f.question} data-answer={f.answer} data-category={f.category}><Edit class="w-4 h-4 text-blue-600" /></button><button class="delete-btn p-1.5 hover:bg-gray-100 rounded" data-id={f.id}><Trash2 class="w-4 h-4 text-red-500" /></button></td>
+      </tr>)}</tbody>
+    </table>
+    {items.length === 0 && <p class="p-8 text-center text-gray-500">Belum ada FAQ.</p>}
+  </div>
+</AdminLayout>
+
+<script>
+  let editingId = null;
+  function openModal(data?: any) {
+    document.getElementById('modal')?.classList.remove('hidden');
+    if (data) { editingId = data.id; (document.getElementById('input-question') as any).value = data.question; (document.getElementById('input-answer') as any).value = data.answer; (document.getElementById('input-category') as any).value = data.category; document.getElementById('modal-title')!.textContent = 'Edit FAQ'; }
+    else { editingId = null; document.getElementById('form')?.reset(); document.getElementById('modal-title')!.textContent = 'Tambah FAQ'; }
+  }
+  function closeModal() { document.getElementById('modal')?.classList.add('hidden'); }
+  (window as any).closeModal = closeModal; (window as any).openModal = openModal;
+  document.getElementById('form')?.addEventListener('submit', async (e) => {
+    e.preventDefault(); const s = document.getElementById('status'); s.textContent = 'Menyimpan...';
+    const data = new FormData(e.target); const body: Record<string, any> = Object.fromEntries(data); body.isPublished = data.has('isPublished');
+    if (editingId) body.id = editingId;
+    const res = await fetch('/api/faqs', { method: editingId ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (res.ok) { s.textContent = 'Berhasil!'; setTimeout(() => window.location.reload(), 800); } else { s.textContent = 'Gagal.'; }
+  });
+  document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => openModal({ id: parseInt(btn.getAttribute('data-id')!), question: btn.getAttribute('data-question'), answer: btn.getAttribute('data-answer'), category: btn.getAttribute('data-category') })));
+  document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', async () => { if (!confirm('Hapus FAQ ini?')) return; await fetch('/api/faqs', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: parseInt(btn.getAttribute('data-id')!) }) }); window.location.reload(); }));
+</script>
+
+<div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-lg">
+    <h2 class="text-xl font-bold mb-4" id="modal-title">Tambah FAQ</h2>
+    <form id="form" class="space-y-4">
+      <div><label class="block text-sm font-medium mb-1">Pertanyaan *</label><input type="text" id="input-question" name="question" required class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none" /></div>
+      <div><label class="block text-sm font-medium mb-1">Jawaban *</label><textarea id="input-answer" name="answer" rows="4" required class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none"></textarea></div>
+      <div><label class="block text-sm font-medium mb-1">Kategori</label><select id="input-category" name="category" class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none"><option value="umum">Umum</option><option value="pembayaran">Pembayaran</option><option value="teknis">Teknis</option><option value="layanan">Layanan</option></select></div>
+      <div><label class="block text-sm font-medium mb-1">Urutan</label><input type="number" name="order" value="0" class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none" /></div>
+      <div class="flex items-center gap-2"><input type="checkbox" name="isPublished" value="true" checked class="w-4 h-4" /><label class="text-sm">Published</label></div>
+      <div class="flex gap-3"><button type="submit" class="flex-1 bg-blue-600 text-white py-2.5 rounded-xl font-semibold hover:bg-blue-700">Simpan</button><button type="button" onclick="closeModal()" class="px-6 py-2.5 rounded-xl border font-semibold hover:bg-gray-50">Batal</button></div>
+      <p id="status" class="text-center text-sm"></p>
+    </form>
+  </div>
+</div>

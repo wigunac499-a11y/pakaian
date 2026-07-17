@@ -1,0 +1,69 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAuthUser } from '../../../lib/auth';
+import { db } from '../../../db';
+import { testimonials } from '../../../db/schema';
+import { desc } from 'drizzle-orm';
+import { Plus, Trash2, Star } from '@lucide/astro';
+
+const user = getAuthUser(Astro.cookies);
+if (!user) return Astro.redirect('/admin/login');
+
+const items = db.select().from(testimonials).orderBy(desc(testimonials.createdAt)).all();
+---
+
+<AdminLayout seo={{ title: 'Testimoni', description: '', noIndex: true }} user={user}>
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Testimoni</h1>
+    <button onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-1">
+      <Plus class="w-4 h-4" /> Tambah Testimoni
+    </button>
+  </div>
+  <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b"><tr><th class="text-left p-4 font-medium text-gray-500">Nama</th><th class="text-left p-4 font-medium text-gray-500">Rating</th><th class="text-left p-4 font-medium text-gray-500">Status</th><th class="text-right p-4 font-medium text-gray-500">Aksi</th></tr></thead>
+      <tbody>
+        {items.map(t => <tr class="border-b last:border-0 hover:bg-gray-50">
+          <td class="p-4 font-medium">{t.name}</td>
+          <td class="p-4"><div class="flex items-center gap-0.5">{Array.from({ length: t.rating || 5 }, () => <Star class="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />)}</div></td>
+          <td class="p-4"><span class={`text-xs font-semibold px-2 py-1 rounded-full ${t.isPublished ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{t.isPublished ? 'Published' : 'Draft'}</span></td>
+          <td class="p-4 text-right"><button class="delete-btn p-1.5 hover:bg-gray-100 rounded" data-id={t.id} data-title={t.name}><Trash2 class="w-4 h-4 text-red-500" /></button></td>
+        </tr>)}
+      </tbody>
+    </table>
+    {items.length === 0 && <p class="p-8 text-center text-gray-500">Belum ada testimoni.</p>}
+  </div>
+
+  <div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-lg">
+      <h2 class="text-xl font-bold mb-4">Tambah Testimoni</h2>
+      <form id="form" class="space-y-4">
+        <div><label class="block text-sm font-medium mb-1">Nama *</label><input type="text" name="name" required class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none" /></div>
+        <div><label class="block text-sm font-medium mb-1">Jabatan</label><input type="text" name="position" class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none" /></div>
+        <div><label class="block text-sm font-medium mb-1">Perusahaan</label><input type="text" name="company" class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none" /></div>
+        <div><label class="block text-sm font-medium mb-1">Testimoni *</label><textarea name="content" rows="3" required class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none"></textarea></div>
+        <div><label class="block text-sm font-medium mb-1">Rating</label><select name="rating" class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none"><option value="5">5</option><option value="4">4</option><option value="3">3</option></select></div>
+        <div class="flex items-center gap-2"><input type="checkbox" name="isPublished" value="true" checked class="w-4 h-4" /><label class="text-sm">Published</label></div>
+        <div class="flex gap-3"><button type="submit" class="flex-1 bg-blue-600 text-white py-2.5 rounded-xl font-semibold hover:bg-blue-700">Simpan</button><button type="button" onclick="closeModal()" class="px-6 py-2.5 rounded-xl border font-semibold hover:bg-gray-50">Batal</button></div>
+        <p id="status" class="text-center text-sm"></p>
+      </form>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  function openModal() { document.getElementById('modal')?.classList.remove('hidden'); }
+  function closeModal() { document.getElementById('modal')?.classList.add('hidden'); document.getElementById('form')?.reset(); }
+  (window as any).closeModal = closeModal; (window as any).openModal = openModal;
+  document.getElementById('form')?.addEventListener('submit', async (e) => {
+    e.preventDefault(); const s = document.getElementById('status'); s.textContent = 'Menyimpan...';
+    const data = new FormData(e.target); const body: Record<string, any> = Object.fromEntries(data); body.rating = parseInt(body.rating); body.isPublished = data.has('isPublished');
+    const res = await fetch('/api/testimonials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (res.ok) { s.textContent = 'Berhasil!'; setTimeout(() => window.location.reload(), 800); } else { s.textContent = 'Gagal.'; }
+  });
+  document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', async () => {
+    if (!confirm(`Hapus testimoni "${btn.getAttribute('data-title')}"?`)) return;
+    await fetch('/api/testimonials', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: parseInt(btn.getAttribute('data-id')!) }) });
+    window.location.reload();
+  }));
+</script>

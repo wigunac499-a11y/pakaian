@@ -1,0 +1,49 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { db } from '../../db';
+import { faqs } from '../../db/schema';
+import { eq, asc } from 'drizzle-orm';
+import { ChevronDown } from '@lucide/astro';
+
+const items = db.select().from(faqs).where(eq(faqs.isPublished, true)).orderBy(asc(faqs.order)).all();
+const categories = [...new Set(items.map(f => f.category))];
+---
+
+<MainLayout seo={{ title: 'FAQ - Pertanyaan Umum', description: 'Pertanyaan yang sering diajukan tentang layanan pembuatan website Web Pakai.', canonical: Astro.url.origin + '/faq' }}>
+  <section class="py-12 md:py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Pertanyaan Umum</h1>
+        <p class="text-gray-600 text-lg">Jawaban atas pertanyaan yang sering diajukan.</p>
+      </div>
+      {items.length === 0 && <p class="text-center text-gray-500">Belum ada FAQ.</p>}
+      {categories.map(cat => (
+        <div class="mb-8">
+          <h2 class="text-xl font-bold text-gray-800 mb-4 capitalize">{cat}</h2>
+          <div class="space-y-3">
+            {items.filter(f => f.category === cat).map((f, i) => (
+              <div class="faq-item border border-gray-200 rounded-xl overflow-hidden">
+                <button class="faq-btn w-full flex items-center justify-between p-4 text-left font-medium text-gray-900 hover:bg-gray-50 transition" data-index={i}>
+                  <span>{f.question}</span>
+                  <ChevronDown class="w-5 h-5 text-gray-400 shrink-0 transition-transform" />
+                </button>
+                <div class="faq-answer hidden px-4 pb-4 text-sm text-gray-600 leading-relaxed">{f.answer}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</MainLayout>
+
+<script>
+  document.querySelectorAll('.faq-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = btn.nextElementSibling;
+      const icon = btn.querySelector('svg');
+      answer.classList.toggle('hidden');
+      icon?.classList.toggle('rotate-180');
+    });
+  });
+</script>

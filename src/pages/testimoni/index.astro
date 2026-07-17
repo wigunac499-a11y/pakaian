@@ -1,0 +1,38 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { db } from '../../db';
+import { testimonials } from '../../db/schema';
+import { eq } from 'drizzle-orm';
+import { Star } from '@lucide/astro';
+
+const items = db.select().from(testimonials).where(eq(testimonials.isPublished, true)).all();
+---
+
+<MainLayout seo={{ title: 'Testimoni Klien', description: 'Lihat apa kata klien kami tentang layanan pembuatan website Web Pakai.', canonical: Astro.url.origin + '/testimoni' }}>
+  <section class="py-12 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Testimoni Klien</h1>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">Apa kata mereka tentang layanan kami.</p>
+      </div>
+      {items.length === 0 && <p class="text-center text-gray-500">Belum ada testimoni.</p>}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {items.map(t => (
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-1 mb-3">
+              {Array.from({ length: t.rating || 5 }, (_, i) => <Star class="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
+            </div>
+            <p class="text-gray-700 text-sm leading-relaxed italic">"{t.content}"</p>
+            <div class="mt-4 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center text-white font-bold text-sm">{t.name.charAt(0)}</div>
+              <div>
+                <p class="font-semibold text-sm">{t.name}</p>
+                {t.position && <p class="text-xs text-gray-500">{t.position}{t.company ? `, ${t.company}` : ''}</p>}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>

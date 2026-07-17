@@ -1,4 +1,4 @@
-import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, integer, text, real } from 'drizzle-orm/sqlite-core';
 
 export const templates = sqliteTable('templates', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -47,5 +47,36 @@ export const admins = sqliteTable('admins', {
   username: text('username').notNull().unique(),
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
+  role: text('role').default('admin'),
+  isActive: integer('is_active', { mode: 'boolean' }).default(true),
+  createdAt: text('created_at').default(new Date().toISOString()),
+});
+
+export const testimonials = sqliteTable('testimonials', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  position: text('position'),
+  company: text('company'),
+  avatar: text('avatar'),
+  content: text('content').notNull(),
+  rating: integer('rating').default(5),
+  isPublished: integer('is_published', { mode: 'boolean' }).default(true),
+  createdAt: text('created_at').default(new Date().toISOString()),
+});
+
+export const faqs = sqliteTable('faqs', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  question: text('question').notNull(),
+  answer: text('answer').notNull(),
+  category: text('category').default('umum'),
+  order: integer('order').default(0),
+  isPublished: integer('is_published', { mode: 'boolean' }).default(true),
+  createdAt: text('created_at').default(new Date().toISOString()),
+});
+
+export const subscribers = sqliteTable('subscribers', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  email: text('email').notNull().unique(),
+  isActive: integer('is_active', { mode: 'boolean' }).default(true),
   createdAt: text('created_at').default(new Date().toISOString()),
 });

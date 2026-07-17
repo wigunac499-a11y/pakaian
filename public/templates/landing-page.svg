@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <rect width="600" height="400" fill="#f8fafc"/>
+  <rect x="0" y="0" width="600" height="50" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="20" y="14" width="30" height="22" rx="4" fill="#3b82f6"/>
+  <rect x="60" y="18" width="60" height="14" rx="4" fill="#1e293b"/>
+  <rect x="420" y="14" width="60" height="22" rx="4" fill="#f1f5f9"/>
+  <rect x="490" y="14" width="90" height="22" rx="11" fill="#3b82f6"/>
+  <rect x="0" y="50" width="600" height="180" fill="#f0f9ff"/>
+  <text x="300" y="110" font-family="system-ui" font-size="28" font-weight="bold" fill="#1e293b" text-anchor="middle">Tingkatkan Bisnis Anda</text>
+  <text x="300" y="135" font-family="system-ui" font-size="14" fill="#64748b" text-anchor="middle">Platform lengkap untuk mengembangkan usaha Anda</text>
+  <rect x="300" y="155" width="160" height="40" rx="20" fill="#3b82f6"/>
+  <text x="380" y="180" font-family="system-ui" font-size="13" font-weight="bold" fill="#fff" text-anchor="middle">Mulai Sekarang</text>
+  <rect x="120" y="155" width="160" height="40" rx="20" fill="#fff" stroke="#cbd5e1"/>
+  <text x="200" y="180" font-family="system-ui" font-size="13" font-weight="bold" fill="#475569" text-anchor="middle">Pelajari Dulu</text>
+  <rect x="15" y="250" width="135" height="130" rx="8" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="55" y="265" width="55" height="55" rx="6" fill="#dbeafe"/>
+  <text x="40" y="340" font-family="system-ui" font-size="12" font-weight="bold" fill="#1e293b" text-anchor="middle">Cepat</text>
+  <text x="40" y="354" font-family="system-ui" font-size="9" fill="#94a3b8" text-anchor="middle">Loading super cepat</text>
+  <rect x="162" y="250" width="135" height="130" rx="8" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="202" y="265" width="55" height="55" rx="6" fill="#ede9fe"/>
+  <text x="187" y="340" font-family="system-ui" font-size="12" font-weight="bold" fill="#1e293b" text-anchor="middle">Responsif</text>
+  <text x="187" y="354" font-family="system-ui" font-size="9" fill="#94a3b8" text-anchor="middle">Semua perangkat</text>
+  <rect x="309" y="250" width="135" height="130" rx="8" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="349" y="265" width="55" height="55" rx="6" fill="#dcfce7"/>
+  <text x="334" y="340" font-family="system-ui" font-size="12" font-weight="bold" fill="#1e293b" text-anchor="middle">SEO</text>
+  <text x="334" y="354" font-family="system-ui" font-size="9" fill="#94a3b8" text-anchor="middle">SEO-friendly</text>
+  <rect x="456" y="250" width="129" height="130" rx="8" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="493" y="265" width="55" height="55" rx="6" fill="#fce7f3"/>
+  <text x="481" y="340" font-family="system-ui" font-size="12" font-weight="bold" fill="#1e293b" text-anchor="middle">Aman</text>
+  <text x="481" y="354" font-family="system-ui" font-size="9" fill="#94a3b8" text-anchor="middle">SSL & enkripsi</text>
+</svg>

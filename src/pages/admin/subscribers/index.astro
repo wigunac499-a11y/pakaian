@@ -1,0 +1,28 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAuthUser } from '../../../lib/auth';
+import { db } from '../../../db';
+import { subscribers } from '../../../db/schema';
+import { desc } from 'drizzle-orm';
+import { Mail } from '@lucide/astro';
+
+const user = getAuthUser(Astro.cookies);
+if (!user) return Astro.redirect('/admin/login');
+
+const items = db.select().from(subscribers).orderBy(desc(subscribers.createdAt)).all();
+---
+
+<AdminLayout seo={{ title: 'Subscribers', description: '', noIndex: true }} user={user}>
+  <h1 class="text-2xl font-bold mb-6">Subscribers Newsletter</h1>
+  <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b"><tr><th class="text-left p-4 font-medium text-gray-500">Email</th><th class="text-left p-4 font-medium text-gray-500">Tanggal</th><th class="text-left p-4 font-medium text-gray-500">Status</th></tr></thead>
+      <tbody>{items.map(s => <tr class="border-b last:border-0 hover:bg-gray-50">
+        <td class="p-4 font-medium">{s.email}</td>
+        <td class="p-4 text-gray-500 text-xs">{new Date(s.createdAt!).toLocaleDateString('id-ID')}</td>
+        <td class="p-4"><span class={`text-xs font-semibold px-2 py-1 rounded-full ${s.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>{s.isActive ? 'Aktif' : 'Tidak Aktif'}</span></td>
+      </tr>)}</tbody>
+    </table>
+    {items.length === 0 && <div class="p-8 text-center text-gray-500"><Mail class="w-12 h-12 mx-auto mb-3 text-gray-300" /><p>Belum ada subscriber.</p></div>}
+  </div>
+</AdminLayout>

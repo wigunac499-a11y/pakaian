@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <rect width="600" height="400" fill="#f8fafc"/>
+  <rect x="0" y="0" width="600" height="50" fill="#1e293b"/>
+  <rect x="20" y="12" width="40" height="26" rx="4" fill="#3b82f6"/>
+  <rect x="70" y="18" width="80" height="14" rx="4" fill="#475569"/>
+  <rect x="160" y="18" width="60" height="14" rx="4" fill="#475569"/>
+  <rect x="230" y="18" width="70" height="14" rx="4" fill="#475569"/>
+  <rect x="310" y="18" width="50" height="14" rx="4" fill="#475569"/>
+  <rect x="500" y="12" width="80" height="26" rx="13" fill="#3b82f6"/>
+  <rect x="0" y="50" width="600" height="180" fill="#dbeafe"/>
+  <text x="300" y="120" font-family="system-ui" font-size="32" font-weight="bold" fill="#1e293b" text-anchor="middle">Toko Online Modern</text>
+  <text x="300" y="150" font-family="system-ui" font-size="14" fill="#64748b" text-anchor="middle">Mudah, Cepat, dan Terpercaya</text>
+  <rect x="215" y="170" width="170" height="36" rx="18" fill="#3b82f6"/>
+  <text x="300" y="194" font-family="system-ui" font-size="13" font-weight="bold" fill="#fff" text-anchor="middle">Belanja Sekarang</text>
+  <rect x="0" y="50" width="600" height="180" fill="url(#s1)" opacity="0.3"/>
+  <rect x="20" y="250" width="130" height="130" rx="8" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="35" y="260" width="100" height="70" rx="4" fill="#e2e8f0"/>
+  <rect x="35" y="340" width="100" height="10" rx="2" fill="#94a3b8"/>
+  <rect x="35" y="354" width="60" height="8" rx="2" fill="#3b82f6"/>
+  <rect x="165" y="250" width="130" height="130" rx="8" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="180" y="260" width="100" height="70" rx="4" fill="#e2e8f0"/>
+  <rect x="180" y="340" width="100" height="10" rx="2" fill="#94a3b8"/>
+  <rect x="180" y="354" width="60" height="8" rx="2" fill="#3b82f6"/>
+  <rect x="310" y="250" width="130" height="130" rx="8" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="325" y="260" width="100" height="70" rx="4" fill="#e2e8f0"/>
+  <rect x="325" y="340" width="100" height="10" rx="2" fill="#94a3b8"/>
+  <rect x="325" y="354" width="60" height="8" rx="2" fill="#3b82f6"/>
+  <rect x="455" y="250" width="130" height="130" rx="8" fill="#fff" stroke="#e2e8f0"/>
+  <rect x="470" y="260" width="100" height="70" rx="4" fill="#e2e8f0"/>
+  <rect x="470" y="340" width="100" height="10" rx="2" fill="#94a3b8"/>
+  <rect x="470" y="354" width="60" height="8" rx="2" fill="#3b82f6"/>
+  <defs><linearGradient id="s1" x1="0" y1="0" x2="600" y2="230"><stop offset="0" stop-color="#3b82f6" stop-opacity="0.1"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0.1"/></linearGradient></defs>
+</svg>

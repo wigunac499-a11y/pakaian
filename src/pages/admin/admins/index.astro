@@ -1,0 +1,62 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAuthUser } from '../../../lib/auth';
+import { db } from '../../../db';
+import { admins } from '../../../db/schema';
+import { Plus, Shield, ShieldCheck } from '@lucide/astro';
+
+const user = getAuthUser(Astro.cookies);
+if (!user) return Astro.redirect('/admin/login');
+
+const items = db.select().from(admins).all();
+---
+
+<AdminLayout seo={{ title: 'Kelola Admin', description: '', noIndex: true }} user={user}>
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Kelola Admin</h1>
+    <button onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-1"><Plus class="w-4 h-4" /> Tambah Admin</button>
+  </div>
+  <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b"><tr><th class="text-left p-4 font-medium text-gray-500">Username</th><th class="text-left p-4 font-medium text-gray-500">Email</th><th class="text-left p-4 font-medium text-gray-500">Role</th><th class="text-left p-4 font-medium text-gray-500">Status</th><th class="text-right p-4 font-medium text-gray-500">Aksi</th></tr></thead>
+      <tbody>{items.map(a => <tr class="border-b last:border-0 hover:bg-gray-50">
+        <td class="p-4 font-medium flex items-center gap-2">{a.role === 'superadmin' ? <ShieldCheck class="w-4 h-4 text-blue-600" /> : <Shield class="w-4 h-4 text-gray-400" />}{a.username}</td>
+        <td class="p-4 text-gray-600 text-xs">{a.email}</td>
+        <td class="p-4 capitalize"><span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-50 text-blue-700">{a.role}</span></td>
+        <td class="p-4"><span class={`text-xs font-semibold px-2 py-1 rounded-full ${a.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{a.isActive ? 'Aktif' : 'Nonaktif'}</span></td>
+        <td class="p-4 text-right">{a.role !== 'superadmin' && <button class="delete-btn p-1.5 hover:bg-gray-100 rounded text-red-500 text-xs" data-id={a.id} data-username={a.username}>Hapus</button>}</td>
+      </tr>)}</tbody>
+    </table>
+  </div>
+</AdminLayout>
+
+<script>
+  function openModal() { document.getElementById('modal')?.classList.remove('hidden'); }
+  function closeModal() { document.getElementById('modal')?.classList.add('hidden'); document.getElementById('form')?.reset(); }
+  (window as any).closeModal = closeModal; (window as any).openModal = openModal;
+  document.getElementById('form')?.addEventListener('submit', async (e) => {
+    e.preventDefault(); const s = document.getElementById('status'); s.textContent = 'Menyimpan...';
+    const data = new FormData(e.target); const body = Object.fromEntries(data);
+    const res = await fetch('/api/admins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (res.ok) { s.textContent = 'Berhasil!'; setTimeout(() => window.location.reload(), 800); } else { const r = await res.json(); s.textContent = r.error || 'Gagal.'; }
+  });
+  document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', async () => {
+    if (!confirm(`Hapus admin "${btn.getAttribute('data-username')}"?`)) return;
+    await fetch('/api/admins', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: parseInt(btn.getAttribute('data-id')!) }) });
+    window.location.reload();
+  }));
+</script>
+
+<div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+    <h2 class="text-xl font-bold mb-4">Tambah Admin</h2>
+    <form id="form" class="space-y-4">
+      <div><label class="block text-sm font-medium mb-1">Username *</label><input type="text" name="username" required class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none" /></div>
+      <div><label class="block text-sm font-medium mb-1">Email *</label><input type="email" name="email" required class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none" /></div>
+      <div><label class="block text-sm font-medium mb-1">Password *</label><input type="password" name="password" required class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none" /></div>
+      <div><label class="block text-sm font-medium mb-1">Role</label><select name="role" class="w-full px-4 py-2 rounded-xl border focus:border-blue-500 outline-none"><option value="admin">Admin</option><option value="editor">Editor</option></select></div>
+      <div class="flex gap-3"><button type="submit" class="flex-1 bg-blue-600 text-white py-2.5 rounded-xl font-semibold hover:bg-blue-700">Simpan</button><button type="button" onclick="closeModal()" class="px-6 py-2.5 rounded-xl border font-semibold hover:bg-gray-50">Batal</button></div>
+      <p id="status" class="text-center text-sm"></p>
+    </form>
+  </div>
+</div>

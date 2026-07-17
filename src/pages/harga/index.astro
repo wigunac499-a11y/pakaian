@@ -1,0 +1,40 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { ArrowRight, CheckCircle } from '@lucide/astro';
+
+const packages = [
+  { name: 'Starter', price: 'Rp 350.000', desc: 'Cocok untuk portofolio atau profil pribadi.', features: ['1 Halaman', 'Hosting 1 tahun', 'Domain .com', 'SSL Gratis', 'SEO Dasar', 'Responsive Design'], popular: false },
+  { name: 'Business', price: 'Rp 650.000', desc: 'Ideal untuk UMKM dan company profile.', features: ['5 Halaman', 'Hosting 1 tahun', 'Domain .com', 'SSL Gratis', 'SEO Lanjutan', 'Form Kontak', 'Integrasi Google Maps', 'Blog', 'Support 30 hari'], popular: true },
+  { name: 'E-Commerce', price: 'Rp 1.200.000', desc: 'Solusi lengkap toko online.', features: ['Unlimited Halaman', 'Hosting 1 tahun', 'Domain .com', 'SSL Gratis', 'Katalog Produk', 'Sistem Pembayaran', 'Dashboard Admin', 'SEO Premium', 'Support 90 hari', 'Gratis Logo'], popular: false },
+];
+---
+
+<MainLayout seo={{ title: 'Harga Paket Website', description: 'Lihat paket harga pembuatan website profesional. Mulai dari Rp 350.000 untuk website portofolio hingga toko online.', canonical: Astro.url.origin + '/harga' }}>
+  <section class="py-12 md:py-20 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Paket Harga</h1>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">Pilih paket yang sesuai dengan kebutuhan bisnis Anda. Semua paket sudah termasuk hosting dan domain.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        {packages.map((pkg, i) => (
+          <div class={`relative bg-white rounded-2xl border-2 overflow-hidden ${pkg.popular ? 'border-blue-500 shadow-xl shadow-blue-100 scale-105' : 'border-gray-100 shadow-sm'}`}>
+            {pkg.popular && <div class="absolute top-0 left-0 right-0 bg-blue-600 text-white text-xs font-semibold text-center py-1.5">PALING POPULER</div>}
+            <div class="p-6 pt-8">
+              <h3 class="text-lg font-bold text-gray-900">{pkg.name}</h3>
+              <p class="text-3xl font-bold text-blue-600 mt-2">{pkg.price}<span class="text-sm font-normal text-gray-500">/tahun</span></p>
+              <p class="text-sm text-gray-500 mt-2">{pkg.desc}</p>
+              <ul class="mt-6 space-y-2">
+                {pkg.features.map(f => <li class="flex items-start gap-2 text-sm text-gray-600"><CheckCircle class="w-4 h-4 text-green-500 shrink-0 mt-0.5" /><span>{f}</span></li>)}
+              </ul>
+              <a href="/kontak"
+                class={`mt-6 flex items-center justify-center gap-2 w-full py-3 rounded-full font-semibold transition ${pkg.popular ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200' : 'border-2 border-gray-300 text-gray-700 hover:border-blue-600 hover:text-blue-600'}`}>
+                Pilih Paket <ArrowRight class="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>

@@ -33,9 +33,7 @@ if (!post) {
         <time>{new Date(post.publishedAt!).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
       </div>
 
-      {post.coverImage && (
-        <img src={post.coverImage} alt={post.title} class="w-full rounded-2xl mb-8 object-cover aspect-video" />
-      )}
+      <img src={post.coverImage || '/images/blog-placeholder.svg'} alt={post.title} class="w-full rounded-2xl mb-8 object-cover aspect-video" />
 
       <div class="prose prose-gray max-w-none">
         {post.content.split('\n').map(p => p.trim() ? <p class="mb-4 leading-relaxed text-gray-700">{p}</p> : null)}

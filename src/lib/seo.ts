@@ -19,7 +19,7 @@ export function buildSEO(props: SEOProps) {
     title: fullTitle,
     description: props.description || defaultDescription,
     canonical: props.canonical,
-    ogImage: props.ogImage || '/og-default.png',
+    ogImage: props.ogImage || '/images/og-default.svg',
     ogType: props.ogType || 'website',
     noIndex: props.noIndex || false,
   };

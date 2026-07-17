@@ -24,7 +24,7 @@ const items = db.select().from(testimonials).where(eq(testimonials.isPublished, 
             </div>
             <p class="text-gray-700 text-sm leading-relaxed italic">"{t.content}"</p>
             <div class="mt-4 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center text-white font-bold text-sm">{t.name.charAt(0)}</div>
+              <img src={t.avatar || '/images/avatar-placeholder.svg'} alt={t.name} class="w-10 h-10 rounded-full object-cover" />
               <div>
                 <p class="font-semibold text-sm">{t.name}</p>
                 {t.position && <p class="text-xs text-gray-500">{t.position}{t.company ? `, ${t.company}` : ''}</p>}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="url(#ogbg)"/>
+  <rect x="80" y="100" width="1040" height="430" rx="24" fill="#fff" opacity="0.95"/>
+  <rect x="100" y="120" width="60" height="60" rx="12" fill="url(#ogbg)"/>
+  <text x="180" y="165" font-family="system-ui" font-weight="800" font-size="52" fill="#1e293b">Web Pakai</text>
+  <text x="100" y="240" font-family="system-ui" font-weight="700" font-size="36" fill="#475569">Website Impian Anda,</text>
+  <text x="100" y="290" font-family="system-ui" font-weight="700" font-size="36" fill="#3b82f6">Siap Pakai</text>
+  <text x="100" y="340" font-family="system-ui" font-size="20" fill="#94a3b8">Platform pembuatan website instan dengan template siap pakai.</text>
+  <text x="100" y="370" font-family="system-ui" font-size="20" fill="#94a3b8">Cepat, responsif, dan SEO-friendly.</text>
+  <rect x="100" y="410" width="200" height="50" rx="25" fill="#3b82f6"/>
+  <text x="200" y="442" font-family="system-ui" font-size="16" font-weight="bold" fill="#fff" text-anchor="middle">webpakai.com</text>
+  <rect x="850" y="200" width="250" height="200" rx="16" fill="#dbeafe"/>
+  <rect x="870" y="220" width="210" height="100" rx="8" fill="#bfdbfe"/>
+  <rect x="870" y="335" width="160" height="12" rx="4" fill="#1e293b"/>
+  <rect x="870" y="353" width="120" height="10" rx="4" fill="#64748b"/>
+  <rect x="870" y="375" width="40" height="10" rx="4" fill="#3b82f6"/>
+  <defs><linearGradient id="ogbg" x1="0" y1="0" x2="1200" y2="630"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+</svg>

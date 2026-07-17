@@ -30,10 +30,7 @@ const posts = db.select().from(blogPosts).where(eq(blogPosts.isPublished, true))
         {posts.map(post => (
           <article class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
             <div class="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-              {post.coverImage
-                ? <img src={post.coverImage} alt={post.title} class="w-full h-full object-cover" loading="lazy" />
-                : <span class="text-4xl font-bold text-blue-300">{post.title.charAt(0)}</span>
-              }
+              <img src={post.coverImage || '/images/blog-placeholder.svg'} alt={post.title} class="w-full h-full object-cover" loading="lazy" />
             </div>
             <div class="p-5">
               <time class="text-xs text-gray-400">{new Date(post.publishedAt!).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</time>

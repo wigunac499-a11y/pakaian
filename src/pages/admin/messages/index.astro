@@ -1,7 +1,7 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { getAuthUser } from '../../../lib/auth';
-import { getDb } from '../../../db';
+import { db } from '../../../db';
 import { contacts, templates } from '../../../db/schema';
 import { desc, eq } from 'drizzle-orm';
 import { Mail, Trash2, CheckCheck } from '@lucide/astro';
@@ -9,9 +9,8 @@ import { Mail, Trash2, CheckCheck } from '@lucide/astro';
 const user = getAuthUser(Astro.cookies);
 if (!user) return Astro.redirect('/admin/login');
 
-const db = await getDb();
-const messages = await db.select().from(contacts).orderBy(desc(contacts.createdAt));
-const allTemplates = await db.select({ id: templates.id, title: templates.title }).from(templates);
+const messages = db.select().from(contacts).orderBy(desc(contacts.createdAt)).all();
+const allTemplates = db.select({ id: templates.id, title: templates.title }).from(templates).all();
 const templateMap = Object.fromEntries(allTemplates.map(t => [t.id, t.title]));
 ---
 

@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getDb } from '../../db';
+import { db } from '../../db';
 import { admins } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import { verifyPassword, createToken } from '../../lib/auth';
@@ -15,8 +15,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    const db = await getDb();
-    const [admin] = await db.select().from(admins).where(eq(admins.username, username));
+    const [admin] = db.select().from(admins).where(eq(admins.username, username)).all();
 
     if (!admin || !verifyPassword(password, admin.password)) {
       return new Response(JSON.stringify({ error: 'Username atau password salah.' }), {

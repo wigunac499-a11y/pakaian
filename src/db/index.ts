@@ -1,14 +1,9 @@
-import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import Database from 'better-sqlite3';
 import * as schema from './schema';
-import 'dotenv/config';
 
-let db: ReturnType<typeof drizzle<typeof schema>>;
+const sqlite = new Database('webpakai.db');
+sqlite.pragma('journal_mode = WAL');
+sqlite.pragma('foreign_keys = ON');
 
-export async function getDb() {
-  if (!db) {
-    const connection = await mysql.createConnection(process.env.DATABASE_URL!);
-    db = drizzle(connection, { schema, mode: 'default' });
-  }
-  return db;
-}
+export const db = drizzle(sqlite, { schema });

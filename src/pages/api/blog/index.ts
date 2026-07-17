@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getDb } from '../../../db';
+import { db } from '../../../db';
 import { blogPosts } from '../../../db/schema';
 import { getAuthUser } from '../../../lib/auth';
 import { generateSlug } from '../../../lib/slug';
@@ -9,12 +9,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!user) return new Response('Unauthorized', { status: 401 });
 
   try {
-    const db = await getDb();
     const body = await request.json();
-
     const slug = generateSlug(body.title);
 
-    await db.insert(blogPosts).values({
+    db.insert(blogPosts).values({
       title: body.title,
       slug,
       excerpt: body.excerpt || null,
@@ -24,10 +22,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       metaDescription: body.metaDescription || body.excerpt,
       author: body.author || 'Admin',
       isPublished: body.isPublished !== false,
-      publishedAt: body.publishedAt ? new Date(body.publishedAt) : new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+      publishedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }).run();
 
     return new Response(JSON.stringify({ success: true }), {
       status: 201,

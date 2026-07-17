@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getDb } from '../../db';
+import { db } from '../../db';
 import { contacts } from '../../db/schema';
 
 export const POST: APIRoute = async ({ request }) => {
@@ -21,16 +21,15 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const db = await getDb();
-    await db.insert(contacts).values({
+    db.insert(contacts).values({
       name,
       email,
       phone: phone || null,
       templateId: template_id ? parseInt(template_id) : null,
       message,
       isRead: false,
-      createdAt: new Date(),
-    });
+      createdAt: new Date().toISOString(),
+    }).run();
 
     return new Response(JSON.stringify({ success: true, message: 'Pesan berhasil dikirim!' }), {
       status: 200,

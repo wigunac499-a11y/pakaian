@@ -1,14 +1,13 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
-import { getDb } from '../../db';
+import { db } from '../../db';
 import { templates } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import { ExternalLink, ArrowRight, CheckCircle } from '@lucide/astro';
 
-const db = await getDb();
 const { slug } = Astro.params;
 
-const [template] = await db.select().from(templates).where(eq(templates.slug, slug!));
+const [template] = db.select().from(templates).where(eq(templates.slug, slug!)).all();
 
 if (!template) {
   return Astro.redirect('/404');

@@ -1,51 +1,51 @@
-import { mysqlTable, serial, varchar, text, datetime, int, boolean } from 'drizzle-orm/mysql-core';
+import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
 
-export const templates = mysqlTable('templates', {
-  id: serial('id').primaryKey(),
-  title: varchar('title', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 255 }).notNull().unique(),
-  category: varchar('category', { length: 100 }).notNull(),
+export const templates = sqliteTable('templates', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  category: text('category').notNull(),
   description: text('description').notNull(),
   features: text('features'),
-  image: varchar('image', { length: 500 }),
-  demoUrl: varchar('demo_url', { length: 500 }),
-  price: varchar('price', { length: 50 }),
-  isPublished: boolean('is_published').default(true),
-  createdAt: datetime('created_at').default(new Date()),
-  updatedAt: datetime('updated_at').default(new Date()),
+  image: text('image'),
+  demoUrl: text('demo_url'),
+  price: text('price'),
+  isPublished: integer('is_published', { mode: 'boolean' }).default(true),
+  createdAt: text('created_at').default(new Date().toISOString()),
+  updatedAt: text('updated_at').default(new Date().toISOString()),
 });
 
-export const blogPosts = mysqlTable('blog_posts', {
-  id: serial('id').primaryKey(),
-  title: varchar('title', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 255 }).notNull().unique(),
+export const blogPosts = sqliteTable('blog_posts', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
   excerpt: text('excerpt'),
   content: text('content').notNull(),
-  coverImage: varchar('cover_image', { length: 500 }),
-  metaTitle: varchar('meta_title', { length: 255 }),
+  coverImage: text('cover_image'),
+  metaTitle: text('meta_title'),
   metaDescription: text('meta_description'),
-  author: varchar('author', { length: 100 }).default('Admin'),
-  isPublished: boolean('is_published').default(true),
-  publishedAt: datetime('published_at').default(new Date()),
-  createdAt: datetime('created_at').default(new Date()),
-  updatedAt: datetime('updated_at').default(new Date()),
+  author: text('author').default('Admin'),
+  isPublished: integer('is_published', { mode: 'boolean' }).default(true),
+  publishedAt: text('published_at').default(new Date().toISOString()),
+  createdAt: text('created_at').default(new Date().toISOString()),
+  updatedAt: text('updated_at').default(new Date().toISOString()),
 });
 
-export const contacts = mysqlTable('contacts', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 255 }).notNull(),
-  email: varchar('email', { length: 255 }).notNull(),
-  phone: varchar('phone', { length: 50 }),
-  templateId: int('template_id'),
+export const contacts = sqliteTable('contacts', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  phone: text('phone'),
+  templateId: integer('template_id'),
   message: text('message').notNull(),
-  isRead: boolean('is_read').default(false),
-  createdAt: datetime('created_at').default(new Date()),
+  isRead: integer('is_read', { mode: 'boolean' }).default(false),
+  createdAt: text('created_at').default(new Date().toISOString()),
 });
 
-export const admins = mysqlTable('admins', {
-  id: serial('id').primaryKey(),
-  username: varchar('username', { length: 100 }).notNull().unique(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
-  password: varchar('password', { length: 255 }).notNull(),
-  createdAt: datetime('created_at').default(new Date()),
+export const admins = sqliteTable('admins', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  username: text('username').notNull().unique(),
+  email: text('email').notNull().unique(),
+  password: text('password').notNull(),
+  createdAt: text('created_at').default(new Date().toISOString()),
 });
